@@ -11,7 +11,7 @@ import type { Mongo } from 'meteor/mongo';
 import { KonchatNotification } from './notification';
 import { fileUpload } from './fileUpload';
 import { t, slashCommands, APIClient } from '../../../utils/client';
-import { messageProperties, MessageTypes, readMessage } from '../../../ui-utils/client';
+import { MessageAction, messageProperties, MessageTypes, readMessage } from '../../../ui-utils/client';
 import { settings } from '../../../settings/client';
 import { hasAtLeastOnePermission } from '../../../authorization/client';
 import { Messages, Rooms, ChatMessage, ChatSubscription } from '../../../models/client';
@@ -73,6 +73,7 @@ export class ChatMessages {
 		}
 
 		messageBoxState.restore({ rid, tmid }, input);
+		this.restoreForwards();
 		this.restoreReplies();
 		this.requestInputFocus();
 	}
@@ -89,6 +90,24 @@ export class ChatMessages {
 		}
 
 		this.$input?.data('reply', [message]).trigger('dataChange');
+	}
+
+	async restoreForwards() {
+		const mid = FlowRouter.getQueryParam('forward');
+		if (!mid) {
+			return;
+		}
+
+		const message = Messages.findOne(mid) || (await callWithErrorHandling('getSingleMessage', mid));
+		console.log(message);
+		if (!message) {
+			return;
+		}
+		const permalink = await MessageAction.getPermaLink(message._id);
+		this.$input?.val(permalink).change();
+		setTimeout(() => {
+			this.$input?.parents(".rc-message-box__container").find('.js-send').click();
+		}, 0)
 	}
 
 	requestInputFocus() {
