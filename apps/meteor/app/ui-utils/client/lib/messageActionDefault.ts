@@ -18,6 +18,7 @@ import CreateDiscussion from '../../../../client/components/CreateDiscussion/Cre
 import { canDeleteMessage } from '../../../../client/lib/utils/canDeleteMessage';
 import { dispatchToastMessage } from '../../../../client/lib/toast';
 import type { ChatMessages } from '../../../ui/client';
+import ForwardMessageModal from '/client/views/room/modals/ForwardMessageModal';
 
 export const addMessageToList = (messagesList: IMessage[], message: IMessage): IMessage[] => {
 	// checks if the message is not already on the list
@@ -112,15 +113,33 @@ Meteor.startup(async function () {
 
 	MessageAction.addButton({
 		id: 'permalink',
-		icon: 'permalink',
-		label: 'Get_link',
+		icon: 'reply-directly',
+		label: 'Forward',
 		// classes: 'clipboard',
 		context: ['message', 'message-mobile', 'threads', 'federated'],
 		async action(_, props) {
 			const { message = messageArgs(this).msg } = props;
 			const permalink = await MessageAction.getPermaLink(message._id);
-			navigator.clipboard.writeText(permalink);
-			dispatchToastMessage({ type: 'success', message: TAPi18n.__('Copied') });
+			imperativeModal.open({
+				component: ForwardMessageModal,
+				props: {
+					permalink: permalink,
+					messageId: message._id,
+					onClose: imperativeModal.close,
+					onForward: (username: any, type: any) => {
+						roomCoordinator.openRouteLink(
+							type,
+							{ name: username },
+							{
+								...FlowRouter.current().queryParams,
+								forward: message._id,
+							},
+						);
+						imperativeModal.close();
+
+					}
+				},
+			});
 		},
 		condition({ subscription }) {
 			return !!subscription;

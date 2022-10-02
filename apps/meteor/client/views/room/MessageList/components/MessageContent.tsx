@@ -54,6 +54,8 @@ const MessageContent: FC<{
 
 	return (
 		<>
+			{(messageAttachments && message.file == undefined) && <Attachments attachments={messageAttachments} file={message.file} />}
+			
 			{!message.blocks && message.md && (
 				<MessageBody data-qa-type='message-body'>
 					{!isEncryptedMessage && <MessageContentBody md={message.md} mentions={message.mentions} channels={message.channels} />}
@@ -70,7 +72,7 @@ const MessageContent: FC<{
 				</MessageBlock>
 			)}
 
-			{!!messageAttachments.length && <Attachments attachments={messageAttachments} file={message.file} />}
+			{(!!messageAttachments.length && message.file) && <Attachments attachments={messageAttachments} file={message.file} />}
 
 			{oembedIsEnabled && !!message.urls?.length && <PreviewList urls={message.urls} />}
 
