@@ -74,6 +74,7 @@ export const MessageList = ({ rid }: MessageListProps): ReactElement => {
 											data-qa-type='message'
 											sequential={shouldShowAsSequential}
 											message={message}
+											checkuser={isUserOwnMessage}
 											unread={unread}
 											mention={mention}
 											all={all}

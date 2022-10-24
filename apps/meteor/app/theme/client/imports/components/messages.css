@@ -317,3 +317,15 @@
 	max-width: 100% !important;
 	max-height: 200px !important;
 }
+
+.rcx-message.messagesender{
+	flex-direction: row-reverse !important;
+}
+
+.messagesender .rcx-message-container{
+	align-items: flex-end !important;
+}
+
+.messagesender .rcx-message-header__wrapper{
+	flex-direction: row-reverse;
+}

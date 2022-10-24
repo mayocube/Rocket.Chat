@@ -21,8 +21,9 @@ const Message: FC<{
 	id: IMessage['_id'];
 	unread: boolean;
 	mention: boolean;
+	checkuser : boolean;
 	all: boolean;
-}> = ({ message, sequential, all, mention, unread, ...props }) => {
+}> = ({ message, sequential, all, mention, unread, checkuser , ...props }) => {
 	const isMessageHighlight = useIsMessageHighlight(message._id);
 	const [isMessageIgnored, toggleMessageIgnored] = useToggle((message as { ignored?: boolean }).ignored ?? false);
 	const {
@@ -42,6 +43,7 @@ const Message: FC<{
 			isEditing={isMessageHighlight}
 			isPending={message.temp}
 			sequential={sequential}
+			className={checkuser ? 'messagesender':'messagereceiver'}
 			data-qa-editing={isMessageHighlight}
 			data-qa-selected={isSelected}
 		>

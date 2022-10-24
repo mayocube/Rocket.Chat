@@ -1,4 +1,4 @@
-import { IMessage } from '@rocket.chat/core-typings';
+import { IMessage, isSettingColor } from '@rocket.chat/core-typings';
 import {
 	MessageHeader as MessageHeaderTemplate,
 	MessageName,
@@ -7,7 +7,7 @@ import {
 	MessageStatusPrivateIndicator,
 } from '@rocket.chat/fuselage';
 import { useTranslation } from '@rocket.chat/ui-contexts';
-import React, { FC, memo } from 'react';
+import React, { FC, memo, useEffect, useState } from 'react';
 
 import { useUserData } from '../../../../hooks/useUserData';
 import { getUserDisplayName } from '../../../../lib/getUserDisplayName';
@@ -33,6 +33,23 @@ const MessageHeader: FC<{ message: IMessage }> = ({ message }) => {
 	const showRoles = useMessageListShowRoles();
 	const roles = useMessageRoles(message.u._id, message.rid, showRoles);
 	const shouldShowRolesList = roles.length > 0;
+	const [color, setColor] = useState('');
+
+	const generatecolor = () => {
+		const temp = user.username;
+		const letter = temp?.toString().slice(0, 2);
+		const str = `${letter}`
+		const n = (str == str?.toLowerCase()) ? 96 : 64
+		const letterres = str?.charCodeAt(0) - n
+		var randomColor = Math.floor(letterres * (letterres + 777215)).toString(16)
+		if (randomColor) {
+			setColor(randomColor)
+		}
+	}
+
+	useEffect(() => {
+		generatecolor()
+	}, [])
 
 	return (
 		<MessageHeaderTemplate>
@@ -41,7 +58,7 @@ const MessageHeader: FC<{ message: IMessage }> = ({ message }) => {
 				title={!showUsername && !usernameAndRealNameAreSame ? `@${user.username}` : undefined}
 				data-username={user.username}
 				onClick={user.username !== undefined ? openUserCard(user.username) : undefined}
-				style={{ cursor: 'pointer' }}
+				style={{ cursor: 'pointer', color: `#${color}` }}
 			>
 				{message.alias || getUserDisplayName(user.name, user.username, showRealName)}
 			</MessageName>
@@ -50,7 +67,7 @@ const MessageHeader: FC<{ message: IMessage }> = ({ message }) => {
 					data-username={user.username}
 					data-qa-type='username'
 					onClick={user.username !== undefined ? openUserCard(user.username) : undefined}
-					style={{ cursor: 'pointer' }}
+					style={{ cursor: 'pointer', color: color }}
 				>
 					@{user.username}
 				</MessageUsername>
