@@ -67,7 +67,7 @@ const MessageHeader: FC<{ message: IMessage }> = ({ message }) => {
 					data-username={user.username}
 					data-qa-type='username'
 					onClick={user.username !== undefined ? openUserCard(user.username) : undefined}
-					style={{ cursor: 'pointer', color: color }}
+					style={{ cursor: 'pointer', color: `#${color}`}}
 				>
 					@{user.username}
 				</MessageUsername>

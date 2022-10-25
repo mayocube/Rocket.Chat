@@ -329,3 +329,16 @@
 .messagesender .rcx-message-header__wrapper{
 	flex-direction: row-reverse;
 }
+
+.messagesender .rcx-css-p3yk16{
+	justify-content: flex-start;
+    flex-direction: row-reverse !important;
+}
+
+.messagesender .rcx-css-az6gik .rcx-message-body{
+	text-align: right !important;
+}
+
+.messagesender .rcx-css-viuaf9{
+	align-items: flex-end;
+}
