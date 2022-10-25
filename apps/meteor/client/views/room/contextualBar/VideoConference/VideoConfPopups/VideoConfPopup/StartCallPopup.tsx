@@ -14,7 +14,6 @@ import {
 	VideoConfPopupFooterButtons,
 } from '@rocket.chat/ui-video-conf';
 import React, { ReactElement, useRef } from 'react';
-
 import { useVideoConfSetPreferences, useVideoConfCapabilities, useVideoConfPreferences } from '../../../../../../contexts/VideoConfContext';
 import VideoConfPopupRoomInfo from './VideoConfPopupRoomInfo';
 
@@ -42,6 +41,11 @@ const StartCallPopup = ({ loading, room, onClose, onConfirm }: StartCallPopup): 
 	const handleStartCall = useMutableCallback(() => {
 		setPreferences(controllersConfig);
 		onConfirm();
+		var audio = new Audio('https://nf1f8200-a.akamaihd.net/downloads/ringtones/files/mp3/7120-download-iphone-6-original-ringtone-42676.mp3');
+		audio.play();
+		setTimeout(() => {
+			audio.pause();
+		}, 6000)
 	});
 
 	return (
