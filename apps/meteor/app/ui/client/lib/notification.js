@@ -137,15 +137,13 @@ export const KonchatNotification = {
 		});
 	},
 
-	newMessage(rid) {
+	newMessage(rid, msgtext) {
 		if (Session.equals(`user_${Meteor.user().username}_status`, 'busy')) {
 			return;
 		}
-
 		const userId = Meteor.userId();
 		const newMessageNotification = getUserPreference(userId, 'newMessageNotification');
 		const audioVolume = getUserPreference(userId, 'notificationsSoundVolume');
-
 		const sub = ChatSubscription.findOne({ rid }, { fields: { audioNotificationValue: 1 } });
 
 		if (!sub || sub.audioNotificationValue === 'none') {
@@ -161,9 +159,21 @@ export const KonchatNotification = {
 			}
 
 			if (newMessageNotification !== 'none') {
-				CustomSounds.play(newMessageNotification, {
-					volume: Number((audioVolume / 100).toPrecision(2)),
-				});
+				//checking if its a call
+				if (msgtext == "") {
+					CustomSounds.play('telephone', {
+						volume: Number((audioVolume / 100).toPrecision(2)),
+						loop: true
+					});
+					// remove sound when join call or clicks on chat.
+					$('#chat-window-' + rid).on('click',function() {
+						CustomSounds.pause('telephone');
+					});
+				} else {
+					CustomSounds.play(newMessageNotification, {
+						volume: Number((audioVolume / 100).toPrecision(2)),
+					});
+				}
 			}
 		} catch (e) {
 			// do nothing

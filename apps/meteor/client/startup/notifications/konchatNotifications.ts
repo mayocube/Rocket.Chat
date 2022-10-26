@@ -40,7 +40,7 @@ type NotificationEvent = {
 	};
 };
 
-function notifyNewMessageAudio(rid: string): void {
+function notifyNewMessageAudio(rid: string , text:string): void {
 	const openedRoomId = Session.get('openedRoom');
 
 	// This logic is duplicated in /client/startup/unread.coffee.
@@ -55,7 +55,7 @@ function notifyNewMessageAudio(rid: string): void {
 		}
 	} else if (!hasFocus || !messageIsInOpenedRoom || !muteFocusedConversations) {
 		// Play a notification sound
-		KonchatNotification.newMessage(rid);
+		KonchatNotification.newMessage(rid , text);
 	}
 }
 
@@ -90,8 +90,7 @@ Meteor.startup(() => {
 				// Show a notification.
 				KonchatNotification.showDesktop(notification);
 			}
-
-			notifyNewMessageAudio(notification.payload.rid);
+			notifyNewMessageAudio(notification.payload.rid , notification.text);
 		});
 
 		CachedChatSubscription.onSyncData = ((action: 'changed' | 'removed', sub: ISubscription): void => {
