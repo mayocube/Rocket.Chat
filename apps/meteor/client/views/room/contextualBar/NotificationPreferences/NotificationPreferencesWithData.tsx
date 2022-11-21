@@ -32,8 +32,8 @@ const NotificationPreferencesWithData = ({ rid }: { rid: string }): ReactElement
 		muteGroupMentions: subscription?.muteGroupMentions,
 		showCounter: !subscription?.hideUnreadStatus,
 		showMentions: !subscription?.hideMentionStatus,
-		desktopAlert: (subscription?.desktopPrefOrigin === 'subscription' && subscription.desktopNotifications) || 'default',
-		desktopSound: subscription?.audioNotificationValue || 'default',
+		desktopAlert: (subscription?.desktopPrefOrigin === 'subscription' && subscription.desktopNotifications) || 'all',
+		desktopSound: subscription?.audioNotificationValue || subscription?.t == 'd' ? 'chime' : 'default',
 		mobileAlert: (subscription?.mobilePrefOrigin === 'subscription' && subscription.mobilePushNotifications) || 'default',
 		emailAlert: (subscription?.emailPrefOrigin === 'subscription' && subscription.emailNotifications) || 'default',
 	});

@@ -7,7 +7,7 @@ import FilePreview from './FilePreview';
 
 type FileUploadModalProps = {
 	onClose: () => void;
-	onSubmit: (name: string, description?: string) => void;
+	onSubmit: (name: string, description?: string, messagesend?: string) => void;
 	file: File;
 	fileName: string;
 	fileDescription?: string;
@@ -24,8 +24,11 @@ const FileUploadModal = ({
 	invalidContentType,
 	showDescription = true,
 }: FileUploadModalProps): ReactElement => {
+	const temp = fileDescription?.trim().split(/\s+/)?.filter((x) => { return x.startsWith('@') }, '@')
+	const filtermsg = fileDescription?.trim().split(/\s+/)?.filter((x) => { return !x.startsWith('@') }, '@')
 	const [name, setName] = useState<string>(fileName);
-	const [description, setDescription] = useState<string>(fileDescription || '');
+	const [description, setDescription] = useState<string>(filtermsg?.join(" ") || '');
+	const [messagesend] = useState<string>(temp?.join(" ") || '');
 	const t = useTranslation();
 	const dispatchToastMessage = useToastMessageDispatch();
 
@@ -47,7 +50,7 @@ const FileUploadModal = ({
 				message: t('error-the-field-is-required', { field: t('Name') }),
 			});
 		}
-		onSubmit(name, description);
+		onSubmit(name, description, messagesend);
 	};
 
 	useEffect(() => {

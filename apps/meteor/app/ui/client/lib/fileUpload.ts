@@ -209,7 +209,7 @@ export const fileUpload = async (
 					imperativeModal.close();
 					uploadNextFile();
 				},
-				onSubmit: (fileName: string, description?: string): void => {
+				onSubmit: (fileName: string, description?: string , messagesend?:string): void => {
 					Object.defineProperty(file.file, 'name', {
 						writable: true,
 						value: fileName,
@@ -218,7 +218,7 @@ export const fileUpload = async (
 						rid,
 						{
 							description,
-							msg,
+							msg:messagesend,
 							file: file.file,
 						},
 						tmid,
